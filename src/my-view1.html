@@ -9,7 +9,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="translate-element.html">
 
 <dom-module id="my-view1">
   <template>
@@ -22,16 +26,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <div class="card">
-      <div class="circle">1</div>
-      <h1>View One</h1>
-      <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
-      <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
+      <div class="circle">{{setLang}}</div>
+      <paper-dropdown-menu on-value-changed="langChange" no-animations>
+        <paper-listbox slot="dropdown-content" selected="0">
+          <paper-item>Español(es)</paper-item>
+          <paper-item>Ingles(en)</paper-item>
+        </paper-listbox>
+      </paper-dropdown-menu>
+      <div id="translate-text">
+        <h1>
+          <translate-element key="title" setLanguage="{{setLang}}"></translate-element>
+        </h1>
+        <p>
+          <translate-element key="text" setLanguage="{{setLang}}"></translate-element>
+        </p>
+      </div>
     </div>
   </template>
 
   <script>
     class MyView1 extends Polymer.Element {
       static get is() { return 'my-view1'; }
+      langChange(event) {
+        let lang = event.detail.value;
+        this.setLang = lang.slice(lang.indexOf('(') + 1, lang.indexOf(')'));
+      }
     }
 
     window.customElements.define(MyView1.is, MyView1);

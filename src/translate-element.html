@@ -1,0 +1,49 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="translate-element">
+  <template>
+    <iron-ajax 
+        auto 
+        url="{{url}}" 
+        handle-as="text" 
+        last-response="{{ajaxResponse}}" 
+        on-response="getData"></iron-ajax>
+    <span>{{value}}</span>
+  </template>
+  <script>
+    class TranslateElement extends Polymer.Element {
+      static get is() { return 'translate-element' }
+      static get properties() {
+        return {
+          setlanguage: {
+            type: String,
+            value: "es",
+            observer: '_activeChanged',
+          },
+          key: {
+            type: String,
+          },
+        }
+      }
+      connectedCallback() {
+        super.connectedCallback();
+        this.url = `./src/data/${this.setlanguage}.json`;
+      }
+      getData(event) {
+          this.ajaxResponse = JSON.parse(event.detail.response);
+          for (const obj of this.ajaxResponse) {
+            for (const key in obj) {
+              if (obj.key === this.key) {
+                  this.value = obj.value;
+              }
+            }
+          }
+      }
+      _activeChanged() {
+        this.connectedCallback();
+      }
+    }
+    customElements.define(TranslateElement.is, TranslateElement);
+  </script>
+</dom-module>
